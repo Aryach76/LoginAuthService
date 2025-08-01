@@ -4,20 +4,18 @@ import com.dev.arya.LoginAuth.dtos.UserDto;
 import com.dev.arya.LoginAuth.models.Role;
 import com.dev.arya.LoginAuth.models.User;
 import com.dev.arya.LoginAuth.repository.UserRepository;
-import com.dev.arya.LoginAuth.repository.roleRepository;
-import lombok.Setter;
+import com.dev.arya.LoginAuth.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private roleRepository roleRepository;
+    private RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository,roleRepository roleRepository){
+    public UserService(UserRepository userRepository, RoleRepository roleRepository){
         this.userRepository=userRepository;
         this.roleRepository=roleRepository;
     }

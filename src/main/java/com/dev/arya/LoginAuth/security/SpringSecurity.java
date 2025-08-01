@@ -4,6 +4,7 @@ package com.dev.arya.LoginAuth.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -13,11 +14,15 @@ public class SpringSecurity {
     @Bean
     public SecurityFilterChain filteringCriteria(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // ✅ new recommended way
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/signup").authenticated()
                 );
         return http.build();
     }
-    //Objects that handle what api endpoints shpuld be authenticated and what not
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+    //Objects that handle what api endpoints should be authenticated and what not
 }
