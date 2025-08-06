@@ -18,7 +18,10 @@ import org.springframework.util.MultiValueMapAdapter;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -53,17 +56,28 @@ public class AuthService {
         MacAlgorithm alg= Jwts.SIG.HS256;
         SecretKey key=alg.key().build();
 
-        String message="{\n" +
-                "  \"email\":\"test@scaler.com\",\n" +
-                "  \"roles\":[\n" +
-                "  \"mentor\",\n" +
-                "  \"ta\"\n" +
-                "  ],\n" +
-                "  \"expirationDate\":\"23rdOctober2023\"\n" +
-                "}";
-        byte[] content= message.getBytes(StandardCharsets.UTF_8);
+//        String message="{\n" +
+//                "  \"email\":\"test@scaler.com\",\n" +
+//                "  \"roles\":[\n" +
+//                "  \"mentor\",\n" +
+//                "  \"ta\"\n" +
+//                "  ],\n" +
+//                "  \"expirationDate\":\"23rdOctober2023\"\n" +
+//                "}";
+//        byte[] content= message.getBytes(StandardCharsets.UTF_8);
 
-        String token=Jwts.builder().content(content,"text/plain").signWith(key,alg).compact();
+        Map<String,Object>jsonForJwt=new HashMap<>();
+        jsonForJwt.put("email",user.getEmail());
+        jsonForJwt.put("roles",user.getRoles());
+        jsonForJwt.put("createdAt",new Date());
+        jsonForJwt.put("expiryAt", new Date(LocalDate.now().plusDays(3).toEpochDay()));
+
+
+       String token=Jwts.builder()
+               .claims(jsonForJwt)
+               .signWith(key,alg)
+               .compact();
+     //   String token=Jwts.builder().content(content,"text/plain").signWith(key,alg).compact();
 
 
         Session session=new Session();
@@ -119,7 +133,9 @@ public class AuthService {
         if(!session.getSessionStatus().equals(SessionStatus.ACTIVE)){
             return SessionStatus.ENDED;
         }
+       // token=session.getToken();
 
+        Jwts.parser()
         return SessionStatus.ACTIVE;
     }
 }
